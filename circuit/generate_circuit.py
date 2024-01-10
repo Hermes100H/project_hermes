@@ -1,8 +1,6 @@
 import numpy as np
 from numpy import poly1d
-
-
-
+from maths_utils import vec2
 
 
 def compute_coord(x_position: float, circuit_function: callable) -> vec2:
