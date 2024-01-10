@@ -6,13 +6,13 @@ class car:
         self.__pos = pPos
         self.__speed = pSpeed
 
-    def SetPos(self, newPos):
+    def SetPos(self, newPos) -> None:
         self.__pos = newPos
 
     def GetPos(self) -> vec2:
         return self.__pos
 
-    def SetSpeed(self, newSpeed):
+    def SetSpeed(self, newSpeed) -> None:
         self.__speed = newSpeed
 
     def GetSpeed(self) -> vec2:

@@ -3,6 +3,8 @@ from maths_utils import *
 from constants import *
 import matplotlib.pyplot as plt
 from car import *
+from circuit import circuit
+from algorithm import *
 import matplotlib.animation as animation
 
 circuit_generator = generate_initial_circuit()
@@ -20,25 +22,35 @@ my_car = car(vec2(s[0,0],s[0,1]), vec2(0.1,0.1))
 # plt.show()
 
 # tentative 
-fig, ax = plt.subplots()
-s_x = s[:,0]
-s_z = s[:,1]
+# fig, ax = plt.subplots()
+# s_x = s[:,0]
+# s_z = s[:,1]
 
-scat = ax.scatter(s_x[0], s_z[0],c = 'b',  label = "Circuit")
-line_2 = ax.plot(s_x[0], s_z[0], label = "Voiture", marker = "o", markersize=10, markerfacecolor="red")[0]
-ax.set(xlim = [0,1000], ylim = [0,1])
-ax.legend()
+# scat = ax.scatter(s_x[0], s_z[0],c = 'b',  label = "Circuit")
+# line_2 = ax.plot(s_x[0], s_z[0], label = "Voiture", marker = "o", markersize=10, markerfacecolor="red")[0]
+# ax.set(xlim = [0,1000], ylim = [0,1])
+# ax.legend()
 
-def update(frame):
-    x = s_x[:frame]
-    y = s_z[:frame]
-    data = np.stack([x,y]).T
-    scat.set_offsets(data)
-    line_2.set_xdata(s_x[:frame])
-    line_2.set_ydata(s_z[:frame])
-    return (scat,line_2)
+# def update(frame):
+#     x = s_x[:frame]
+#     y = s_z[:frame]
+#     data = np.stack([x,y]).T
+#     scat.set_offsets(data)
+#     line_2.set_xdata(s_x[:frame])
+#     line_2.set_ydata(s_z[:frame])
+#     return (scat,line_2)
     
-ani = animation.FuncAnimation(fig = fig, func = update, frames= n, interval = 100)
-plt.show()
+#ani = animation.FuncAnimation(fig = fig, func = update, frames= n, interval = 100)
+#plt.show()
 
-print(s_x)
+#print(s)
+
+c = circuit([-1,-1,2])
+coords = c.GetCircuitCoords()
+test = np.arange(0,1.2,0.1)
+
+algo = algorithm(my_car, c)
+algo.ComputeAll()
+
+# plt.plot(coords[:,0], coords[:,1],'r.',test, c.GetCircuitGenerator()(test))
+# plt.show()
