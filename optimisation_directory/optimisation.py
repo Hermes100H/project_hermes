@@ -38,7 +38,7 @@ contraintes = [
 
 # Options pour l'algorithme d'optimisation_directory
 Options = {
-    "maxiter": 200,
+    "maxiter": 100,
     "disp": True,
     "eps": 0.25,
 }
@@ -49,5 +49,5 @@ for i in range(3):
 
 profile_opt = scipy.optimize.minimize(calcTiming, np.array(profile0), method='SLSQP', constraints=contraintes, options=Options)
 print(profile_opt.x)
-print(EnergieDepenseParInstantSpatial(profile_opt.x, dx, dy, G))
-print(f'Energie totale du profil optimal : {np.sqrt(sum([val_profile ** 2 for val_profile in EnergieDepenseParInstantSpatial(profile_opt.x, dx, dy, G)]))}')
+print([val_profile ** 2 for val_profile in EnergieDepenseParInstantSpatial(profile_opt.x, dx, dy, G)])
+print(f'Energie totale du profil optimal : {sum([val_profile ** 2 for val_profile in EnergieDepenseParInstantSpatial(profile_opt.x, dx, dy, G)])}')

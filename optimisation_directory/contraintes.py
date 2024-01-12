@@ -3,7 +3,7 @@ from typing import List
 import numpy as np
 
 from ResolutionSystemePFD import calculSolutions, calculVitesse
-from constantes import PUISSANCE_ACCELERATION_MAXIMALE, QUANTITE_ENERGIE_ACCELERATION_MAXIMALE, \
+from constantes import PUISSANCE_ACCELERATION_MAXIMALE, ENERGIE_ACCELERATION_MAXIMALE, \
     NBRE_SEGMENTS
 
 
@@ -25,7 +25,7 @@ def EnergieDepenseParInstantSpatial(profile: List, dx: float, dy: float, G: floa
 
 def ContrainteNorme2Carre(profile: List, dx: float, dy: float, G: float):
     """L'énergie 'dépensée' pour l'acceleration ne doit pas dépasser une certaine valeur sur le circuit"""
-    return QUANTITE_ENERGIE_ACCELERATION_MAXIMALE-np.sqrt(sum([energ ** 2 for energ in EnergieDepenseParInstantSpatial(profile, dx, dy, G)]))
+    return ENERGIE_ACCELERATION_MAXIMALE-sum([energ ** 2 for energ in EnergieDepenseParInstantSpatial(profile, dx, dy, G)])
 
 
 def ContrainteNormeInfini(profile: List):

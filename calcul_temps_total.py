@@ -30,14 +30,12 @@ def calcTimingForDisplay(plist_x, plist_v, profile):
     return t
 
 
-nbre_segments = 10
+nbre_segments = 20
 
 profile = [0 for i in range(nbre_segments)]
-for i in range(5):
+for i in range(3):
     profile[i] = 10
 
-profile = [ 2.26452703,  1.65725536,  1.48802207,  1.29539665,  1.09293804,  0.87740254,
-  0.65803851,  0.42106603,  0.19593427, -0.02517831]
 list_x = [i for i in range(nbre_segments)]
 list_v = []
 
