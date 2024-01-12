@@ -1,7 +1,5 @@
 from typing import List
 
-import numpy as np
-
 from ResolutionSystemePFD import calculSolutions, calculVitesse
 from constantes import PUISSANCE_ACCELERATION_MAXIMALE, ENERGIE_ACCELERATION_MAXIMALE, \
     NBRE_SEGMENTS
