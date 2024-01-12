@@ -3,10 +3,19 @@ import scipy.integrate as itg
 
 class circuit:
 
-    def __init__(self, coeffs=[-0.08, -0.02, 0.3, 0.9, -0.6]):
+    def __init__(self, coeffs=[1,0,0], starting_x = -2, ending_x = 3, segment_length = 0.03):
         self.__circuitGenerator = np.poly1d(coeffs)
-        self.__circuitCoords = self.discretize(starting_x=-2, ending_x= 3)
+        self.__circuitCoords = self.discretize(starting_x, ending_x, segment_length)
 
+    def GetDeltas(self):
+        coords = self.__circuitCoords
+        n = coords.shape[0]
+        DX = np.zeros(n)
+        DY = np.zeros(n)
+        for i in range(1, n):
+            DX[i] = coords[i,0] - coords[i-1,0]
+            DY[i] = coords[i,1] - coords[i-1,1]
+        return DX, DY
 
     def compute_poly_length(self, a: float, b: float) -> float:
         assert a <= b, "a must be lesser than b when computing distance between a and b"
