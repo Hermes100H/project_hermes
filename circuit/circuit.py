@@ -10,11 +10,11 @@ class circuit:
     def GetDeltas(self):
         coords = self.__circuitCoords
         n = coords.shape[0]
-        DX = np.zeros(n)
-        DY = np.zeros(n)
-        for i in range(1, n):
-            DX[i] = coords[i,0] - coords[i-1,0]
-            DY[i] = coords[i,1] - coords[i-1,1]
+        DX = np.zeros(n-1)
+        DY = np.zeros(n-1)
+        for i in range(n-1):
+            DX[i] = coords[i+1, 0] - coords[i, 0]
+            DY[i] = coords[i+1, 1] - coords[i, 1]
         return DX, DY
 
     def compute_poly_length(self, a: float, b: float) -> float:
