@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from ResolutionSystemePFD import calculSolutions, calculVitesse
+from optimisation_directory.ResolutionSystemePFD import calculSolutions, calculVitesse
 
 Temps_total = 0
 
@@ -14,11 +14,10 @@ def calcTimingForDisplay(plist_x, plist_v, profile):
     G = 10
     dx = 1
     dy = 1/12
-    VITESSE_SUPP = 10
     index_profile = 0
     plist_v.append(vk)
     for val in plist_x:
-        Force_poussee = profile[index_profile] * VITESSE_SUPP
+        Force_poussee = profile[index_profile]
         vk, tsol, solved_solution = calculSolutions(dy, dx, vk, G, Force_poussee)
         vk, solved_vitesse = calculVitesse(tsol, vk, dy, dx, G, Force_poussee)
         if not solved_solution or not solved_vitesse:
@@ -34,8 +33,11 @@ def calcTimingForDisplay(plist_x, plist_v, profile):
 nbre_segments = 10
 
 profile = [0 for i in range(nbre_segments)]
-for i in range(3):
-    profile[i] = 1
+for i in range(5):
+    profile[i] = 10
+
+profile = [ 2.26452703,  1.65725536,  1.48802207,  1.29539665,  1.09293804,  0.87740254,
+  0.65803851,  0.42106603,  0.19593427, -0.02517831]
 list_x = [i for i in range(nbre_segments)]
 list_v = []
 
