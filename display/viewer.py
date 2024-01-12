@@ -1,11 +1,11 @@
 import numpy as np
 from random import *
-from constants import *
+from display.constants import *
 import matplotlib.pyplot as plt
 import time
 from matplotlib.animation import FuncAnimation
 
-class algorithm:
+class viewer:
 
     def __init__(self, car, circuit, v0=0, energy=20):
         # Parameters
