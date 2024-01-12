@@ -45,12 +45,12 @@ my_car = car(vec2(s[0,0],s[0,1]), vec2(0.1,0.1))
 
 #print(s)
 
-c = circuit([-1,-1,2])
+c = circuit([1,0,0])
 coords = c.GetCircuitCoords()
 test = np.arange(0,1.2,0.1)
 
-algo = algorithm(my_car, c)
-algo.ComputeAll()
+algo = algorithm(my_car, c, 0)
+algo.Show()
 
 # plt.plot(coords[:,0], coords[:,1],'r.',test, c.GetCircuitGenerator()(test))
 # plt.show()

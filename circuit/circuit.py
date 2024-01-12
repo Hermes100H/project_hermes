@@ -5,7 +5,7 @@ class circuit:
 
     def __init__(self, coeffs=[-0.08, -0.02, 0.3, 0.9, -0.6]):
         self.__circuitGenerator = np.poly1d(coeffs)
-        self.__circuitCoords = self.discretize()
+        self.__circuitCoords = self.discretize(starting_x=-2, ending_x= 3)
 
 
     def compute_poly_length(self, a: float, b: float) -> float:
@@ -29,7 +29,7 @@ class circuit:
             else:
                 x_next_inf = x_mid
 
-    def discretize(self, starting_x=0, ending_x=1, segment_length=0.03):
+    def discretize(self, starting_x=-3, ending_x=2.8, segment_length=0.03):
         X = []
         Y = []
         threshold = 1e-10
