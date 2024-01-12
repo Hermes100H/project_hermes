@@ -36,10 +36,4 @@ def bezier_function(*control_points: vec2):
         print(B_right)
         B_x += coeff_x*B
         B_y += coeff_y*B
-
     return B_x, B_y
-
-x,y = bezier_function(vec2(0,0), vec2(1,1))
-print(x(0), x(1))
-print(y(0), y(1))
-a=1
