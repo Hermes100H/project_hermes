@@ -8,11 +8,9 @@ https://web.stanford.edu/~boyd/papers/pdf/speed_opt.pdf
 liens github : 
 https://github.com/jainachin/bayesrace
 
-
 ## Objectifs :
 
 - en énergie limitée, trouver le trajet le plus court pour un véhicule le long d'un chemin en accélérant
 - définir la physique de la voiture à respecter pour optimiser
 - définir un premier tracé simple 2D
 - déterminer la puissance à donner pour le faire le plus rapidement possible
-
