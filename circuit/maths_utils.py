@@ -1,6 +1,7 @@
+from math import comb
+
 import numpy as np
 import scipy.integrate as itg
-from math import comb
 from numpy import poly1d
 
 
@@ -26,7 +27,7 @@ def bezier_function(*control_points: Vec2):
     for i, control_point in enumerate(control_points):
         coeff_x = comb(N, i) * control_point.x
         coeff_y = comb(N, i) * control_point.y
-        B = poly1d([-1, 1])**(N-i) * poly1d([1, 0])**i
+        B = poly1d([-1, 1]) ** (N - i) * poly1d([1, 0]) ** i
         B_x += coeff_x * B
         B_y += coeff_y * B
 

@@ -13,7 +13,7 @@ def calcTimingForDisplay(plist_x, plist_v, profile):
     vk = 0
     G = 10
     dx = 1
-    dy = 1/12
+    dy = 1 / 12
     index_profile = 0
     plist_v.append(vk)
     for val in plist_x:

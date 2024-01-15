@@ -1,7 +1,9 @@
-import numpy as np
 from typing import Tuple
-from sympy import nsolve, Reals, cos, sin, exp, Symbol
+
+import numpy as np
+
 from circuit.maths_utils import compute_angle
+from sympy import Reals, Symbol, cos, exp, nsolve, sin
 from utils.constants import CONST_MU, CONST_g
 
 
@@ -21,25 +23,33 @@ def calculSolutions(dy, dx, vk, G, Fp):
 def calculVitesse(tsol, vk, dy, dx, G, Fp):
     theta = compute_angle(dy, dx)
     solved = True
-    vitesse_selon_x = tsol * (- G * np.cos(theta) * np.sin(theta) + Fp * np.cos(theta)) + vk * np.cos(theta)
+    vitesse_selon_x = tsol * (-G * np.cos(theta) * np.sin(theta) + Fp * np.cos(theta)) + vk * np.cos(theta)
     if vitesse_selon_x < 0.001:
         print(f"Vitesse selon x négative")
         solved = False
     else:
-        vk = np.sqrt((tsol * (-G * np.cos(theta) * np.sin(theta) + Fp * np.cos(theta)) + vk * np.cos(theta)) ** 2 + (
-                tsol * (- G * (np.sin(theta) ** 2) + Fp * np.sin(theta)) + vk * np.sin(theta)) ** 2)
+        vk = np.sqrt(
+            (tsol * (-G * np.cos(theta) * np.sin(theta) + Fp * np.cos(theta)) + vk * np.cos(theta)) ** 2
+            + (tsol * (-G * (np.sin(theta) ** 2) + Fp * np.sin(theta)) + vk * np.sin(theta)) ** 2
+        )
     return vk, solved
 
 
-def solve_position_ode_with_air_friction(initial_x_position: float, next_position: float, initial_speed: float,
-                                         boost_force: float,
-                                         theta: float, friction_coeff: float = CONST_MU, mass: float = 1) -> Tuple[
-    float, float]:
+def solve_position_ode_with_air_friction(
+    initial_x_position: float,
+    next_position: float,
+    initial_speed: float,
+    boost_force: float,
+    theta: float,
+    friction_coeff: float = CONST_MU,
+    mass: float = 1,
+) -> Tuple[float, float]:
     coeff_A = -(mass * (friction_coeff * initial_speed + mass * CONST_g * sin(theta) + boost_force)) / (
-            friction_coeff ** 2 * cos(theta))
+        friction_coeff**2 * cos(theta)
+    )
     coeff_lambda = -(mass * CONST_g * sin(theta) + boost_force) / friction_coeff
     coeff_tau = mass / (friction_coeff * cos(theta))
-    t = Symbol('t', positive=True)
+    t = Symbol("t", positive=True)
 
     x_t_next = coeff_A * (exp(-t / coeff_tau) - 1) + coeff_lambda * t + initial_x_position - next_position
 
