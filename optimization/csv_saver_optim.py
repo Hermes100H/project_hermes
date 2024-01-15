@@ -3,8 +3,8 @@ import os
 from datetime import datetime
 
 from circuit.circuit import circuit
-from optimisation_directory.contraintes import EnergieDepenseParInstantSpatial
-from optimisation_directory.costFunction import calcTimings
+from optimization.contraintes import EnergieDepenseParInstantSpatial
+from optimization.costFunction import calcTimings
 
 
 def CSVsaver(optim_result_profile, circui: circuit):

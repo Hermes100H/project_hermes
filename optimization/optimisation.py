@@ -3,8 +3,8 @@ import scipy
 
 from circuit.circuit import circuit
 from contraintes import EnergieDepenseParInstantSpatial, ContrainteNorme2Carre, ContrainteNormeInfini
-from optimisation_directory.costFunction import CostFunction, calcTimings
-from optimisation_directory.csv_saver_optim import CSVsaver
+from optimization.costFunction import CostFunction, calcTimings
+from optimization.csv_saver_optim import CSVsaver
 
 # Options pour l'algorithme d'optimisation
 Options = {

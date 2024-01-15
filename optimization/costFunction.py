@@ -1,8 +1,8 @@
 from typing import List
 
 from circuit.circuit import circuit
-from optimisation_directory.ResolutionSystemePFD import calculSolutions, calculVitesse
-from optimisation_directory.constantes import G
+from optimization.ResolutionSystemePFD import calculSolutions, calculVitesse
+from optimization.constantes import G
 
 
 def calcTimings(profile: List, circui: circuit):

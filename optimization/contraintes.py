@@ -1,7 +1,7 @@
 from typing import List
 
 from circuit.circuit import circuit
-from optimisation_directory.costFunction import calcTimings
+from optimization.costFunction import calcTimings
 
 PUISSANCE_ACCELERATION_MAXIMALE = 10  # m/(s**2) pour une voiture de 1500kg
 ENERGIE_ACCELERATION_MAXIMALE = 28  # Energie disponible pour tout le circuit
