@@ -1,11 +1,11 @@
 from typing import List
 
-from circuit.circuit import circuit
+from circuit.circuit import Circuit
 from optimization.ResolutionSystemePFD import calculSolutions, calculVitesse
 from optimization.constantes import G
 
 
-def calcTimings(profile: List, circui: circuit):
+def calcTimings(profile: List, circui: Circuit):
     vk = 0
     dx, dy = circui.GetDeltas()
     timings = list()
@@ -21,5 +21,5 @@ def calcTimings(profile: List, circui: circuit):
     return timings
 
 
-def CostFunction(profile: List, circui: circuit):
+def CostFunction(profile: List, circui: Circuit):
     return sum(calcTimings(profile, circui))

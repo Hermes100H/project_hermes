@@ -2,12 +2,12 @@ import csv
 import os
 from datetime import datetime
 
-from circuit.circuit import circuit
+from circuit.circuit import Circuit
 from optimization.contraintes import EnergieDepenseParInstantSpatial
 from optimization.costFunction import calcTimings
 
 
-def CSVsaver(optim_result_profile, circui: circuit):
+def CSVsaver(optim_result_profile, circui: Circuit):
     now = datetime.now()
     date = now.strftime("%d_%m_%Y_%H_%M_%S")
     try:

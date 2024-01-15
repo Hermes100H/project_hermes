@@ -11,6 +11,8 @@ class Circuit:
         self.end_x = ending_x
         self.segment_length = segment_length
         self.__circuitGenerator = np.poly1d(coeffs)
+        self.__circuit = np.poly1d(coeffs)
+        self.__circuitCoords = self.discretize(starting_x, ending_x, segment_length)
         
     def GetDeltas(self):
         coords = self.__circuitCoords

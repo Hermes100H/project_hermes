@@ -1,7 +1,7 @@
 import numpy as np
 import scipy
 
-from circuit.circuit import circuit
+from circuit.circuit import Circuit
 from contraintes import EnergieDepenseParInstantSpatial, ContrainteNorme2Carre, ContrainteNormeInfini
 from optimization.costFunction import CostFunction, calcTimings
 from optimization.csv_saver_optim import CSVsaver
@@ -13,7 +13,7 @@ Options = {
     "eps": 0.25,
 }
 
-circui = circuit(coeffs=[0, 1/12, 0], segment_length=1, starting_x=0, ending_x=10)
+circui = Circuit(coeffs=[0, 1/12, 0], segment_length=1, starting_x=0, ending_x=10)
 NBRE_SEGMENTS = circui.GetCircuitCoords().shape[0] - 1
 profile0 = [0 for i in range(NBRE_SEGMENTS)]
 for i in range(int(NBRE_SEGMENTS/3)):
