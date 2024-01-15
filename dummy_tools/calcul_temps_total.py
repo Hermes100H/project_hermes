@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from optimization.ResolutionSystemePFD import calculSolutions, calculVitesse
+from optimization.pfd_solver import calculSolutions, calculVitesse
 
 Temps_total = 0
 

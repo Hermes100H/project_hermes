@@ -18,7 +18,7 @@ def EnergieDepenseParInstantSpatial(profile: List, circui: circuit):
 def ContrainteNorme2Carre(profile: List, circui: circuit):
     """L'énergie 'dépensée' pour l'acceleration ne doit pas dépasser une certaine valeur sur le circuit"""
     return ENERGIE_ACCELERATION_MAXIMALE-sum(EnergieDepenseParInstantSpatial(profile, circui))
-
+ 
 
 def ContrainteNormeInfini(profile: List):
     """La puissance maximale delivrée par la voiture à un instant t est limitée"""

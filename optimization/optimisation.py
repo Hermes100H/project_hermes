@@ -35,7 +35,6 @@ contraintes = [
     }
 ]
 
-
 profile_opt = scipy.optimize.minimize(CostFunction, np.array(profile0), method='SLSQP', constraints=contraintes, options=Options, args=(circui,))
 print(profile_opt.x)
 print(EnergieDepenseParInstantSpatial(profile_opt.x, circui))
