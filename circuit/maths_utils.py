@@ -26,17 +26,12 @@ def bezier_function(*control_points: Vec2):
     for i, control_point in enumerate(control_points):
         coeff_x = comb(N, i) * control_point.x
         coeff_y = comb(N, i) * control_point.y
-        B_right = poly1d([1] + [0 for k in range(i)])
-        B_left = poly1d([1 for k in range(N - i)], r=True)
-        B = B_left * B_right
-        print("----------")
-        print(B_left)
-        print(B_right)
+        B = poly1d([-1, 1])**(N-i) * poly1d([1, 0])**i
         B_x += coeff_x * B
         B_y += coeff_y * B
+
     return B_x, B_y
 
 
 def compute_angle(dy: float, dx: float):
     return np.arctan(dy / dx)
-

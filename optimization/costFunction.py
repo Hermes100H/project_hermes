@@ -1,8 +1,8 @@
 from typing import List
 
 from circuit.circuit import Circuit
-from optimization.ResolutionSystemePFD import calculSolutions, calculVitesse
-from optimization.constantes import G
+from optimization.pfd_solver import calculSolutions, calculVitesse
+from utils.constants import CONST_g
 
 
 def calcTimings(profile: List, circui: Circuit):
@@ -11,8 +11,8 @@ def calcTimings(profile: List, circui: Circuit):
     timings = list()
     for i in range(dy.shape[0]):
         acceleration = profile[i]
-        vk, tsol, solved_solution = calculSolutions(dy[i], dx[i], vk, G, acceleration)
-        vk, solved_vitesse = calculVitesse(tsol, vk, dy[i], dx[i], G, acceleration)
+        vk, tsol, solved_solution = calculSolutions(dy[i], dx[i], vk, CONST_g, acceleration)
+        vk, solved_vitesse = calculVitesse(tsol, vk, dy[i], dx[i], CONST_g, acceleration)
         if not solved_solution or not solved_vitesse:
             t = 100000
             timings.append(t)
