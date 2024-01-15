@@ -1,9 +1,9 @@
 import numpy as np
 import scipy
 
-from ResolutionSystemePFD import calculSolutions, calculVitesse
+from pfd_solver import calculSolutions, calculVitesse
 from contraintes import EnergieDepenseParInstantSpatial, ContrainteNorme2Carre, ContrainteNormeInfini
-from constantes import NBRE_SEGMENTS, G, dx, dy
+from utils.constants import NBRE_SEGMENTS, CONST_g, dx, dy
 
 
 def calcTiming(profile):
@@ -20,7 +20,7 @@ def calcTiming(profile):
     return t
 
 
-# Formulation des optimisation_directory : une contrainte sur l'énergie max sur tout le circuit et une contrainte sur la puissance
+# Formulation des optimization : une contrainte sur l'énergie max sur tout le circuit et une contrainte sur la puissance
 # disponible à un endroit du circuit
 args = (dx, dy, G,)
 
@@ -36,7 +36,7 @@ contraintes = [
     }
 ]
 
-# Options pour l'algorithme d'optimisation_directory
+# Options pour l'algorithme d'optimization
 Options = {
     "maxiter": 100,
     "disp": True,
