@@ -4,6 +4,10 @@ import scipy.integrate as itg
 class circuit:
 
     def __init__(self, coeffs=[1,0,0], starting_x = -2, ending_x = 3, segment_length = 0.03):
+        self.coeffs = coeffs
+        self.start_x = starting_x
+        self.end_x = ending_x
+        self.segment_length = segment_length
         self.__circuitGenerator = np.poly1d(coeffs)
         self.__circuitCoords = self.discretize(starting_x, ending_x, segment_length)
 

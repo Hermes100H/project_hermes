@@ -1,3 +1,4 @@
 # Pycache
 */__pycache__/
 .idea/
+optim_results/test/*
