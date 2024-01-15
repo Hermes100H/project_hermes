@@ -3,21 +3,23 @@ import scipy.integrate as itg
 
 from circuit.maths_utils import compute_poly_length
 
-
 class Circuit:
 
-    def __init__(self, coeffs=[1, 0, 0], starting_x=-2, ending_x=3, segment_length=0.03):
-        self.__circuit = np.poly1d(coeffs)
-        self.__circuitCoords = self.discretize(starting_x, ending_x, segment_length)
-
+    def __init__(self, coeffs=[1,0,0], starting_x = -2, ending_x = 3, segment_length = 0.03):
+        self.coeffs = coeffs
+        self.start_x = starting_x
+        self.end_x = ending_x
+        self.segment_length = segment_length
+        self.__circuitGenerator = np.poly1d(coeffs)
+        
     def GetDeltas(self):
         coords = self.__circuitCoords
         n = coords.shape[0]
-        DX = np.zeros(n)
-        DY = np.zeros(n)
-        for i in range(1, n):
-            DX[i] = coords[i, 0] - coords[i - 1, 0]
-            DY[i] = coords[i, 1] - coords[i - 1, 1]
+        DX = np.zeros(n-1)
+        DY = np.zeros(n-1)
+        for i in range(n-1):
+            DX[i] = coords[i+1, 0] - coords[i, 0]
+            DY[i] = coords[i+1, 1] - coords[i, 1]
         return DX, DY
 
 
