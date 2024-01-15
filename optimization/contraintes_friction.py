@@ -1,16 +1,16 @@
 from typing import List
 
 from circuit.circuit import Circuit
-from optimization.costFunction import calcTimings
+from optimization.costFunction import compute_times_with_air_friction
 
 PUISSANCE_ACCELERATION_MAXIMALE = 10  # m/(s**2) pour une voiture de 1500kg
-ENERGIE_ACCELERATION_MAXIMALE = 1000  # Energie disponible pour tout le circuit
+ENERGIE_ACCELERATION_MAXIMALE = 10000  # Energie disponible pour tout le circuit
 
 
 def EnergieDepenseParInstantSpatial(profile: List, circui: Circuit):
     """Calcul en fonction du profile et des temps d'acceleration sur le circuit de l'energie depensee"""
     valRen = list()
-    timings = calcTimings(profile, circui)
+    timings = compute_times_with_air_friction(profile, circui)
     for i in range(len(timings)):
         valRen.append((profile[i] * timings[i]) ** 2)
     return valRen

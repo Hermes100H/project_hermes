@@ -1,10 +1,10 @@
 import numpy as np
-from maths_utils import compute_poly_length
+
+from circuit.maths_utils import compute_poly_length
 
 
 class Circuit:
-
-    def __init__(self, coeffs=[1, 0, 0], starting_x=-2, ending_x=3, segment_length=0.03):
+    def __init__(self, coeffs=[1, 0, 0], starting_x=0, ending_x=1, segment_length=0.05):
         self.coeffs = coeffs
         self.start_x = starting_x
         self.end_x = ending_x
@@ -52,3 +52,11 @@ class Circuit:
 
     def GetCircuitGenerator(self):
         return self.__circuit
+
+    def getNumberSegments(self):
+        return self.__circuitCoords.shape[0] - 1
+
+
+if __name__ == "__main__":
+    c = Circuit()
+    c.getNumberSegments()
