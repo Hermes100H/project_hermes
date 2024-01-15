@@ -1,6 +1,6 @@
 from typing import List
 
-from ResolutionSystemePFD import calculSolutions, calculVitesse
+from pfd_solver import calculSolutions, calculVitesse
 from constantes import PUISSANCE_ACCELERATION_MAXIMALE, ENERGIE_ACCELERATION_MAXIMALE, \
     NBRE_SEGMENTS
 

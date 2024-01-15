@@ -1,0 +1,2 @@
+CONST_MU = 0.1
+CONST_g = 9.81

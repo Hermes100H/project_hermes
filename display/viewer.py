@@ -1,6 +1,3 @@
-import numpy as np
-from random import *
-from display.constants import *
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
