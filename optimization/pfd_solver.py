@@ -2,7 +2,7 @@ import numpy as np
 from typing import Tuple
 from sympy import nsolve, Reals, cos, sin, exp, Symbol
 from circuit.maths_utils import compute_angle
-from utils.constants import CONST_MU, CONST_g
+from utils.constants import CONST_MU, CONST_g, TIME_ON_FAILURE
 
 
 def calculSolutions(dy, dx, vk, G, Fp):
@@ -31,7 +31,7 @@ def calculVitesse(tsol, vk, dy, dx, G, Fp):
     return vk, solved
 
 
-def solve_position_ode_with_air_friction(initial_x_position: float, next_position: float, initial_speed: float,
+def solve_position_ode_with_air_friction(delta_x: float, initial_speed: float,
                                          boost_force: float,
                                          theta: float, friction_coeff: float = CONST_MU, mass: float = 1) -> Tuple[
     float, float]:
@@ -41,13 +41,13 @@ def solve_position_ode_with_air_friction(initial_x_position: float, next_positio
     coeff_tau = mass / (friction_coeff * cos(theta))
     t = Symbol('t', positive=True)
 
-    x_t_next = coeff_A * (exp(-t / coeff_tau) - 1) + coeff_lambda * t + initial_x_position - next_position
+    x_t_next = coeff_A * (exp(-t / coeff_tau) - 1) + coeff_lambda * t - delta_x
 
     initial_guess = 0.2
     try:
         t_next = np.min(nsolve(x_t_next, t, initial_guess, domain=Reals, positive=True))
         v_t_next = (-(coeff_A / coeff_tau) * exp(-t_next / coeff_tau) + coeff_lambda) / cos(theta)
     except ValueError:
-        t_next = 100_000
+        t_next = TIME_ON_FAILURE
         v_t_next = -1
     return t_next, v_t_next
