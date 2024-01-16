@@ -1,6 +1,6 @@
 from typing import List
 
-from circuit.circuit import Circuit
+from circuit.circuit_polynomial import Circuit
 from optimization.pfd_solver import calculSolutions, calculVitesse
 from utils.constants import CONST_g
 

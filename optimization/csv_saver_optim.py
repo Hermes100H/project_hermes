@@ -4,7 +4,7 @@ from datetime import datetime
 
 from scipy.optimize import OptimizeResult
 
-from circuit.circuit import Circuit
+from circuit.circuit_polynomial import Circuit
 from optimization.contraintes import EnergieDepenseParInstantSpatial
 from optimization.costFunction import calcTimings
 
