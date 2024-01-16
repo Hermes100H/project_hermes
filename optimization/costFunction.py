@@ -1,6 +1,6 @@
 from typing import List
 
-from circuit.circuit import Circuit
+from circuit.circuit_polynomial import Circuit
 from circuit.maths_utils import compute_angle
 from optimization.pfd_solver import calculSolutions, calculVitesse, solve_position_ode_with_air_friction
 from utils.constants import INITIAL_SPEED, TIME_ON_FAILURE, CONST_g
