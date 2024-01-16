@@ -1,9 +1,9 @@
 from typing import Tuple
 
 import numpy as np
+from sympy import Reals, Symbol, cos, exp, nsolve, sin
 
 from circuit.maths_utils import compute_angle
-from sympy import Reals, Symbol, cos, exp, nsolve, sin
 from utils.constants import CONST_MU, CONST_g
 
 

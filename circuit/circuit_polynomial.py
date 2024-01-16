@@ -1,6 +1,6 @@
 import numpy as np
 
-from maths_utils import compute_poly_length
+from circuit.maths_utils import compute_poly_length
 
 
 class Circuit:
