@@ -27,6 +27,7 @@ def init_profile(circuit: Circuit):
         profile0[i] = 10
     return profile0
 
+
 def init_args_optim(circuit):
     nbre_segments = circuit.GetCircuitCoords().shape[0] - 1
     args = (circuit,)
