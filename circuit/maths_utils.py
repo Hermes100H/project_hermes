@@ -1,8 +1,10 @@
 from math import comb
+from typing import Union
 
 import numpy as np
 import scipy.integrate as itg
 from numpy import poly1d
+from scipy.interpolate import CubicSpline
 
 
 class Vec2:
@@ -16,6 +18,15 @@ def compute_poly_length(poly_function: np.poly1d, a: float, b: float) -> float:
 
     def df_dx(x):
         return np.sqrt(1 + poly_function.deriv()(x) ** 2)
+
+    return itg.quad(df_dx, a, b)[0]
+
+
+def compute_poly_length_spline(spline_fun: CubicSpline, a: float, b: float) -> float:
+    assert a <= b, "a must be lesser than b when computing distance between a and b"
+
+    def df_dx(x):
+        return np.sqrt(1 + spline_fun.derivative()(x) ** 2)
 
     return itg.quad(df_dx, a, b)[0]
 

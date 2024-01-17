@@ -9,48 +9,14 @@ from contraintes import ContrainteNorme2Carre, ContrainteNormeInfini, EnergieDep
 from optimization.costFunction import CostFunction, calcTimings
 from optimization.csv_saver_optim import CSVsaver, print_optim_info
 
-# Options pour l'algorithme d'optimisation
-Options = {
-    "maxiter": 100,
-    "disp": True,
-    "eps": 0.25,
-}
-
-circui = Circuit(coeffs=[0, 1 / 12, 0], segment_length=1, starting_x=0, ending_x=10)
-NBRE_SEGMENTS = circui.GetCircuitCoords().shape[0] - 1
-profile0 = [0 for i in range(NBRE_SEGMENTS)]
-for i in range(int(NBRE_SEGMENTS / 3)):
-    profile0[3 * i] = 3
-
-# Formulation des optimisation : une contrainte sur l'énergie max sur tout le circuit et une contrainte sur la puissance
-# disponible à un endroit du circuit
-args = (circui,)
-
-contraintes = [
-    {"type": "ineq", "fun": ContrainteNorme2Carre, "args": args},
-    {
-        "type": "ineq",
-        "fun": ContrainteNormeInfini,
-    },
-]
-
-profile_opt = scipy.optimize.minimize(
-    CostFunction, np.array(profile0), method="SLSQP", constraints=contraintes, options=Options, args=(circui,)
-)
-print(profile_opt.x)
-print(EnergieDepenseParInstantSpatial(profile_opt.x, circui))
-print(calcTimings(profile_opt.x, circui))
-print(f"Energie totale du profil optimal : {sum(EnergieDepenseParInstantSpatial(profile_opt.x, circui))}")
-CSVsaver(profile_opt.x, circui)
-
 
 def init_circuit():
-    circuit = Circuit(coeffs=[1 / 100, 0, 0], segment_length=1, starting_x=0, ending_x=10)
+    circuit = Circuit(coeffs=[0.01, -0.2, 1], segment_length=5, starting_x=0, ending_x=30)
     return circuit
 
 
 def init_circuit_spline():
-    circuit = CircuitBspline(dx_length=0.1)
+    circuit = CircuitBspline(segment_length=0.1)
     circuit.plot_spline()
     return circuit
 
@@ -60,6 +26,8 @@ def init_profile(circuit: Circuit):
     profile0 = [0 for i in range(nbre_segments)]
     for i in range(int(nbre_segments / 2)):
         profile0[i] = 10
+    print(f"Profil initial :")
+    print(profile0)
     return profile0
 
 
@@ -120,7 +88,7 @@ def optim(optim_method, profile0, contraintes, args, tol, option, bounds, circui
 
 
 def optimize():
-    circuit = init_circuit_spline()
+    circuit = init_circuit()
     profile0 = init_profile(circuit)
     args, tol, bounds, contraintes, options_trust_constr, options_slsqp, options_cobyla = init_args_optim(circuit)
 

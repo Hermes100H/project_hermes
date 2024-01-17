@@ -14,3 +14,10 @@ https://github.com/jainachin/bayesrace
 - définir la physique de la voiture à respecter pour optimiser
 - définir un premier tracé simple 2D
 - déterminer la puissance à donner pour le faire le plus rapidement possible
+
+## Soutenance :
+1) Contexte
+2) Enjeu technique
+3) Solution
+4) Résultats
+
