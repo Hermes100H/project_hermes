@@ -43,4 +43,8 @@ def compute_times_with_air_friction(boost_profile: List, circuit: Circuit):
 
 
 def CostFunction(profile: List, circui: Circuit):
-    return sum(compute_times_with_air_friction(profile, circui))
+    return sum(calcTimings(profile, circui))
+
+
+def friction_cost_function(profile: List, circuit: Circuit):
+    return sum(compute_times_with_air_friction(profile, circuit))
