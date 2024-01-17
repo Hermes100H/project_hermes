@@ -1,10 +1,10 @@
 from typing import Tuple
 
 import numpy as np
+from sympy import Reals, Symbol, cos, exp, nsolve, sin
 
 from circuit.maths_utils import compute_angle
-from sympy import Reals, Symbol, cos, exp, nsolve, sin
-from utils.constants import CONST_MU, CONST_g
+from utils.constants import CONST_MU, MASS, SPEED_ON_FAILURE, TIME_ON_FAILURE, CONST_g
 
 
 def calculSolutions(dy, dx, vk, G, Fp):
@@ -36,28 +36,29 @@ def calculVitesse(tsol, vk, dy, dx, G, Fp):
 
 
 def solve_position_ode_with_air_friction(
-    initial_x_position: float,
-    next_position: float,
+    delta_x: float,
     initial_speed: float,
     boost_force: float,
     theta: float,
     friction_coeff: float = CONST_MU,
-    mass: float = 1,
+    mass: float = MASS,
 ) -> Tuple[float, float]:
-    coeff_A = -(mass * (friction_coeff * initial_speed + mass * CONST_g * sin(theta) + boost_force)) / (
+    coeff_A = (mass**2 * (boost_force - CONST_g * sin(theta)) - mass * friction_coeff * initial_speed) / (
         friction_coeff**2 * cos(theta)
     )
-    coeff_lambda = -(mass * CONST_g * sin(theta) + boost_force) / friction_coeff
+    coeff_lambda = mass * (boost_force - CONST_g * sin(theta)) / friction_coeff
     coeff_tau = mass / (friction_coeff * cos(theta))
     t = Symbol("t", positive=True)
 
-    x_t_next = coeff_A * (exp(-t / coeff_tau) - 1) + coeff_lambda * t + initial_x_position - next_position
+    x_t_next = coeff_A * (exp(-t / coeff_tau) - 1) + coeff_lambda * t - delta_x
 
     initial_guess = 0.2
     try:
-        t_next = np.min(nsolve(x_t_next, t, initial_guess, domain=Reals, positive=True))
+        t_next = nsolve(x_t_next, t, initial_guess, domain=Reals, positive=True)
+        if t_next < 0:
+            raise ValueError
         v_t_next = (-(coeff_A / coeff_tau) * exp(-t_next / coeff_tau) + coeff_lambda) / cos(theta)
     except ValueError:
-        t_next = 100_000
-        v_t_next = -1
+        t_next = TIME_ON_FAILURE
+        v_t_next = SPEED_ON_FAILURE
     return t_next, v_t_next

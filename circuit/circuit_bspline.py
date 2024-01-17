@@ -1,9 +1,9 @@
-import scipy
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy
+
 
 class CircuitBspline:
-
     def __init__(self, x=None, y=None, dx_length=0.1):
         # Solve mutable argument problem
         if y is None:
@@ -21,9 +21,9 @@ class CircuitBspline:
     def plot_spline(self):
         xs = np.arange(self.start_x, self.end_x + self.dx_length, self.dx_length)
         plt.figure()
-        plt.title('Splines')
-        plt.plot(self.x, self.y, 'go')
-        plt.plot(xs, self.spline(xs), '-b')
+        plt.title("Splines")
+        plt.plot(self.x, self.y, "go")
+        plt.plot(xs, self.spline(xs), "-b")
         plt.show()
 
     def GetDeltas(self):

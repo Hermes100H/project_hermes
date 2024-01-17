@@ -52,3 +52,11 @@ class Circuit:
 
     def GetCircuitGenerator(self):
         return self.__circuit
+
+    def getNumberSegments(self):
+        return self.__circuitCoords.shape[0] - 1
+
+
+if __name__ == "__main__":
+    c = Circuit()
+    c.getNumberSegments()
