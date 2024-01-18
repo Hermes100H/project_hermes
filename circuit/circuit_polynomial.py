@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 from circuit.maths_utils import compute_poly_length
 
@@ -11,6 +12,10 @@ class Circuit:
         self.segment_length = segment_length
         self.__circuit = np.poly1d(coeffs)
         self.__circuitCoords = self.discretize(starting_x, ending_x, segment_length)
+
+    def plot_circuit(self):
+        plt.plot(self.__circuitCoords.T)
+        plt.show()
 
     def GetDeltas(self):
         coords = self.__circuitCoords

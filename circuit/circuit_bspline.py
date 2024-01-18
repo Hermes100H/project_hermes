@@ -30,6 +30,10 @@ class CircuitBspline:
         plt.plot(xs, self.spline(xs), "-b")
         plt.show()
 
+    def get_spline_point_tangent(self):
+        for xi in self.x:
+            print(self.spline.derivative()(xi))
+
     def GetDeltas(self):
         coords = self.__circuitCoords
         n = coords.shape[0]
@@ -67,3 +71,6 @@ class CircuitBspline:
 
     def GetCircuitCoords(self):
         return self.__circuitCoords
+
+    def getNumberSegments(self):
+        return self.__circuitCoords.shape[0] - 1

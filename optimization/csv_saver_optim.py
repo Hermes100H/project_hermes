@@ -1,15 +1,17 @@
 import csv
 import os
 from datetime import datetime
+from typing import Union
 
 from scipy.optimize import OptimizeResult
 
+from circuit.circuit_bspline import CircuitBspline
 from circuit.circuit_polynomial import Circuit
 from optimization.contraintes import EnergieDepenseParInstantSpatial
 from optimization.costFunction import calcTimings
 
 
-def CSVsaver(optim_result_profile, circuit: Circuit):
+def CSVsaver(optim_result_profile, circuit: Union[Circuit, CircuitBspline], file_name: str):
     now = datetime.now()
     date = now.strftime("%d_%m_%Y_%H_%M_%S")
     try:
@@ -17,16 +19,19 @@ def CSVsaver(optim_result_profile, circuit: Circuit):
     except FileExistsError:
         pass
     with open(
-        f"./optim_results/test/circuitt_{date}_coeffs_{circuit.coeffs[0]}_{circuit.coeffs[1]}_{circuit.coeffs[2]}_start_{circuit.start_x}_end_{circuit.end_x}_len_{circuit.segment_length}.csv",
+        f"./optim_results/test/circuit_{file_name}.csv",
         "w",
         newline="",
     ) as file:
         writer = csv.writer(file)
-        writer.writerow(["profile", "timing", "energy"])
+        writer.writerow(["profile", "timing", "energy", "DX", "DY"])
+        dx, dy = circuit.GetDeltas()
         columns = [
             tuple(optim_result_profile),
             tuple(calcTimings(optim_result_profile, circuit)),
             tuple(EnergieDepenseParInstantSpatial(optim_result_profile, circuit)),
+            tuple(dx),
+            tuple(dy),
         ]
         rows = zip(*columns)
         writer.writerows(rows)
