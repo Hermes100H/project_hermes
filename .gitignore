@@ -2,3 +2,7 @@
 */__pycache__/
 .idea/
 optim_results/test/*
+unity_space_mountain/**/Logs/
+unity_space_mountain/**/UserSettings/
+unity_space_mountain/**/Library/
+unity_space_mountain/**/Temp/
