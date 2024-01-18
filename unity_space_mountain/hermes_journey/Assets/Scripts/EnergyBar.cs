@@ -56,9 +56,9 @@ public class EnergyBar : MonoBehaviour{
         Color redColor = Color.red;
 
         // Interpolate between red and orange
-        Color lerpedColor1 = Color.Lerp(redColor, orangeColor, Mathf.InverseLerp(0, 0.5f, energyRemaining));
+        Color lerpedColor1 = Color.Lerp(redColor, orangeColor, Mathf.InverseLerp(0, 0.75f, energyRemaining));
         // Interpolate between orange and blue
-        Color lerpedColor2 = Color.Lerp(orangeColor, blueColor, Mathf.InverseLerp(0.5f, 1f, energyRemaining));
+        Color lerpedColor2 = Color.Lerp(orangeColor, blueColor, Mathf.InverseLerp(0.25f, 1f, energyRemaining));
         // Final interpolation between the two intermediate colors
         Color finalLerpedColor = Color.Lerp(lerpedColor1, lerpedColor2, Mathf.InverseLerp(0, 1f, energyRemaining));
 
