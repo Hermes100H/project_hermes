@@ -5,128 +5,98 @@ using UnityEngine;
 public class NumPfdSolver : MonoBehaviour{
 
 
-    public float sol;
-
     private float theta;
     private float mass;
-    private float friction_coeff;
-    private float initial_speed;
+    private float frictionCoeff;
+    private float initialSpeed;
     private float boost;
     private float dx;
     private float g = 9.81f;
-    private float A;
-    private float tau;
-    private float lambda;
+    private PositionFunction xFunction;
+
+    public Solution tSolution;
+
+
+    public NumPfdSolver(float pMass, float pFricitonCoeff, float pInitialSpeed, float pBoost, float pDx, float pDy){
+        SetConstants(pMass, pFricitonCoeff, pInitialSpeed, pBoost, pDx, pDy);
+
+    }
 
 
     public void SetAngle(float dx, float dy){
         theta = Mathf.Atan(dy/dx);
     }
 
-    public void SetConstants(float pMass, float pFriction_coeff, float pInitial_speed, float pBoost, float pDx, float pDy){
+    public void SetConstants(float pMass, float pFrictionCoeff, float pInitialSpeed, float pBoost, float pDx, float pDy){
         
         SetAngle(pDx, pDy);
         mass = pMass;
-        friction_coeff = pFriction_coeff;
-        initial_speed = pInitial_speed;
+        frictionCoeff = pfrictionCoeff;
+        initialSpeed = pinitialSpeed;
         boost = pBoost;
         dx = pDx;
-        SetEquationConstants();
+        SetPositionFunction();
 
     }
 
-    private void SetEquationConstants(){
+    private void SetPositionFunction(){
 
-        A = (Mathf.Pow(mass, 2)*(boost - g*Mathf.Sin(theta)) - mass*friction_coeff*initial_speed)/(Mathf.Pow(friction_coeff, 2)*Mathf.Cos(theta));
-        lambda = mass*(boost-g*Mathf.Sin(theta))/friction_coeff;
-        tau = mass / (friction_coeff*Mathf.Cos(theta));
-    }
+        float A = (Mathf.Pow(mass, 2)*(boost - g*Mathf.Sin(theta)) - mass*frictionCoeff*initialSpeed)/(Mathf.Pow(frictionCoeff, 2)*Mathf.Cos(theta));
+        float lambda = mass*(boost-g*Mathf.Sin(theta))/frictionCoeff;
+        float tau = mass / (frictionCoeff*Mathf.Cos(theta));
 
-    
-    private float ComputeInflexionTime(){
+        xFunction = PositionFunction(A, tau, lambda, dx);
 
-        float e = Mathf.Exp(1);
-        float tInflexion = tau*Mathf.Log(A/(tau*lambda), e);
-        return tInflexion;
     }
 
 
-    private float ComputeXEqualXnext(float t){
-        float x  = A*(Mathf.Exp(-t/tau) -1) + lambda*t - dx;
-        return x;
-    }
 
 
     public Solution Solve(){
         
         Debug.Log("Starting to solve");
-        float tSolution;
 
-        if (theta < 0){tSolution = NumSolve();}
+        if(theta > 0 && !(xFunction.HasValidRoot())) tSolution = Solution();
 
-        else{
+        if(theta > 0 && xFunction.HasValidRoot()){
 
-            float tInflexion = ComputeInflexionTime();
-            if (ComputeXEqualXnext(tInflexion) < 0) {return new Solution();}
+            xFunction.FindRootInterval();
+            float tLeft = xFunction.tLeft;
+            float tRight = xFunction.tRight;
+            float slope = xFunction.slope;
 
-            tSolution = NumSolve(tInflexion);
+            tSolution = DichotomyNumSolve(tLeft, tRight, slope);
         }
 
-        return new Solution(tSolution);
+        if(theta < 0){ // Cas facile, où la voiture tombe grâce à la pente, donc atteint forcément le prochain point
+            DichotomyNumSolve(0f, 16f, 1f);
+        }
+
+
 
     }
 
 
-    public float NumSolve(){
-        // Cas ou theta > 0, courbe de x croissante sur R+
-        float threshold = 1e-9f;
-        float tLeft = 0.0f;
-        float tRight = 100.0f;
+    public Solution DichotomyNumSolve(float tLeft, float tRight, float slope, float threshold=1e-9f){
+
         float tCurrent = (tRight + tLeft)/2.0f;
         float xCurrent = ComputeXEqualXnext(tCurrent);
         
-        while (xCurrent > threshold){
+        while (Mahtf.Abs(xCurrent) > threshold){
 
-            Debug.Log("running");
-
-            if (xCurrent < 0){
-                tRight = tCurrent;
-                tCurrent = (tRight + tLeft)/2.0f;
-            }
-            else{
+            if (slope*xCurrent < 0){
                 tLeft = tCurrent;
                 tCurrent = (tRight + tLeft)/2.0f;
             }
-            xCurrent = ComputeXEqualXnext(tCurrent);
-
-        }
-
-        return tCurrent;
-    }
-
-    public float NumSolve(float tRight){
-
-        // Cas ou theta < 0, courbe de x croissante sur [0, tRight]
-        float threshold = 1e-15f;
-        float tLeft = 0.0f;
-        float tCurrent = (tRight + tLeft)/2.0f;
-        float xCurrent = ComputeXEqualXnext(tCurrent);
-        
-        while (xCurrent > threshold){
-
-            if (xCurrent < 0){
+            else{
                 tRight = tCurrent;
                 tCurrent = (tRight + tLeft)/2.0f;
             }
-            else{
-                tLeft = tCurrent;
-                tCurrent = (tRight + tLeft)/2.0f;
-            }
-            xCurrent = ComputeXEqualXnext(tCurrent);
+            xCurrent = xFunction.Evaluate(tCurrent);
 
         }
 
-        return tCurrent;
+        return new Solution(tCurrent);
     }
 
 
@@ -169,5 +139,130 @@ public class Solution{
         value = 100000f;
         exists = false;
     }
+
+}
+
+
+
+public class PositionFunction{
+
+
+    private float A;
+    private float tau;
+    private float lambda;
+    private float dx;
+
+
+    private bool smiling;
+    public float tInflexion;
+    public float xInflexion;
+    public float xOrigin;
+
+    public float tLeft;
+    public float tRight;
+    public float slope;
+
+    public Solution root;
+
+
+
+    public PositionFunction(float pA, float pTau, float pLambda, float pDx){
+        A = pA;
+        tau = pTau;
+        lambda = pLambda;
+        dx = pDx;
+        SetConstants();
+    }
+
+
+    private void SetConstants(){
+
+        SetInflexionTime();
+        SetInflexionPosition();
+        SetSmiling();
+    }
+
+
+    public float Evaluate(float t){
+
+        return A*(Mathf.Exp(-t/tau) -1) + lambda*t - dx;
+    }
+
+
+    public void SetOrigin(){
+        xOrigin = Evaluate(0f);
+    }
+    private float SetInflexionTime(){
+
+        float e = Mathf.Exp(1);
+        tInflexion = tau*Mathf.Log(A/(tau*lambda), e);
+    }
+
+    private float SetInflexionPosition(){
+        xInflexion = Evaluate(tInflexion);
+    }
+
+    private void SetSmiling(){
+        smiling = Evaluate(ComputeInflexionTime()) < Evaluate(ComputeInflexionTime() + 1.0f);
+    }
+
+    public bool HasValidRoot(){
+
+        if ( (xInflexion > 0) && (smiling) ) return false;
+        if ( (xInflexion < 0) && (!smiling) ) return false;
+
+        if ( (xInflexion < 0) && (tInflexion < 0) && (smiling) && (xOrigin > 0) )  return false;
+        if ( (xInflexion > 0) && (tInflexion < 0) && (!smiling) && (xOrigin < 0) )  return false;
+
+        return true;
+    }
+
+
+    public void FindRootInterval(){
+
+        if ( (tInflexion < 0) && (xInflexion < 0) && smiling ){
+            tLeft = 0f;
+            tRight = 16f;
+            slope = 1f;
+            return;
+        } 
+
+        if ( (tInflexion > 0) && (xInflexion < 0) && smiling ){
+            if (xOrigin < 0f){
+                tLeft = tInflexion;
+                tRight = tInflexion + 16f;
+                slope = 1f;
+            }
+            else{
+             tLeft = 0f;
+             tRight = tInflexion;
+             slope = -1f;
+            }
+            return;
+        }
+
+        if ( (tInflexion < 0) && (xInflexion > 0) && (!smiling) ){
+            tLeft = 0;
+            tRight = 16f;
+            slope = -1f;
+            return;
+        }
+
+        if ( (tInflexion > 0) && (xInflexion > 0) && (!smiling) ){
+            if (xOrigin > 0f){
+                tLeft = tInflexion;
+                tRight = tInflexion + 16f;
+                slope = -1f;
+            }
+            else{
+                tLeft = 0f;
+                tRight = tInflexion;
+                slope = 1f;
+            }
+            return;
+        }
+        
+    }
+
 
 }
