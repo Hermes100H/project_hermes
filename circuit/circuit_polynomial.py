@@ -13,9 +13,9 @@ class Circuit:
         self.__circuit = np.poly1d(coeffs)
         self.__circuitCoords = self.discretize(starting_x, ending_x, segment_length)
 
-    def plot_circuit(self):
-        plt.plot(self.__circuitCoords.T)
-        plt.show()
+    def plot_circuit(self, block: bool):
+        plt.plot(self.__circuitCoords)
+        plt.show(block=block)
 
     def GetDeltas(self):
         coords = self.__circuitCoords
@@ -64,4 +64,4 @@ class Circuit:
 
 if __name__ == "__main__":
     c = Circuit()
-    c.getNumberSegments()
+    c.plot_circuit(True)

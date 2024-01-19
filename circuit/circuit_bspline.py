@@ -8,12 +8,14 @@ from circuit.maths_utils import compute_poly_length_spline
 
 class CircuitBspline:
 
-    def __init__(self, x=None, y=None, segment_length=0.1):
+    def __init__(self, x=None, y=None, segment_length=1):
         # Solve mutable argument problem
         if y is None:
-            y = [0, 2, 2, -1, 1, 0, 3]
+            y = [0, -1.28, 1.78, 0.36, 3.04, 5.27]
+            y = [10 * val for val in y]
         if x is None:
-            x = [0, 1 / 2, 3 / 2, 5 / 2, 7 / 2, 9 / 2, 5]
+            x = [0, 4.29, 8.39, 10.11, 11.48, 16.64]
+            x = [10 * val for val in x]
         self.x = x
         self.y = y
         self.start_x = x[0]
@@ -22,13 +24,14 @@ class CircuitBspline:
         self.segment_length = segment_length
         self.__circuitCoords = self.discretize()
 
-    def plot_spline(self):
-        xs = np.arange(self.start_x, self.end_x + 0.1, 0.1)
+    def plot_spline(self, block: bool):
+        x_step = (self.end_x-self.start_x)/100
+        xs = np.arange(self.start_x, self.end_x + x_step, x_step)
         plt.figure()
         plt.title("Splines")
         plt.plot(self.x, self.y, "go")
         plt.plot(xs, self.spline(xs), "-b")
-        plt.show()
+        plt.show(block=block)
 
     def get_spline_point_tangent(self):
         for xi in self.x:
@@ -74,3 +77,8 @@ class CircuitBspline:
 
     def getNumberSegments(self):
         return self.__circuitCoords.shape[0] - 1
+
+
+if __name__ == "__main__":
+    circuit = CircuitBspline(segment_length=1)
+    circuit.plot_spline(True)

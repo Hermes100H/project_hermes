@@ -7,30 +7,37 @@ import scipy
 
 from circuit.circuit_bspline import CircuitBspline
 from circuit.circuit_polynomial import Circuit
-from contraintes import ContrainteNorme2Carre, ContrainteNormeInfini
+from contraintes import ContrainteNorme2Carre, ContrainteNormeInfini, ENERGIE_ACCELERATION_MAXIMALE, \
+    EnergieDepenseParInstantSpatial
+from display.display_acceleration_function import plot_boost_profile
 from optimization.costFunction import CostFunction
 from optimization.csv_saver_optim import CSVsaver, print_optim_info
+from utils.constants import TIME_ON_FAILURE
 
 
 def init_circuit():
     circuit = Circuit(coeffs=[0.01, -0.2, 1], segment_length=5, starting_x=0, ending_x=60)
-    circuit.plot_circuit()
+    circuit.plot_circuit(block=False)
     return circuit
 
 
 def init_circuit_spline():
-    circuit = CircuitBspline(segment_length=0.1)
-    #circuit.plot_spline()
+    circuit = CircuitBspline(segment_length=2)
+    circuit.plot_spline(False)
     return circuit
 
 
 def init_profile(circuit: Union[Circuit, CircuitBspline]):
     nbre_segments = circuit.getNumberSegments()
     profile0 = [0 for i in range(int(nbre_segments))]
-    for i in range(int(nbre_segments/4)):
+    for i in range(int(nbre_segments)):
         profile0[i] = 10
     print(f"Profil initial :")
     print(profile0)
+    print(
+        f"Energie totale du profil initial : {sum(EnergieDepenseParInstantSpatial(profile0, circuit))}"
+    )
+    print(f"Temps de parcours du profil inital : {CostFunction(profile0, circuit)}")
     return profile0
 
 
@@ -87,7 +94,9 @@ def optim(optim_method, profile0, contraintes, args, tol, option, bounds, circui
     end = time.time()
     print_optim_info(profile_opt, circuit, optim_method)
     print(f"Temps de calcul de l'optimisation {optim_method} : {end - start} secondes")
-    CSVsaver(profile_opt.x, circuit, file_name="SplineCubiqueUnity_test")
+    file_name = "SplineCubiqueUnity_pluslong_test"
+    CSVsaver(profile_opt.x, circuit, file_name=file_name)
+    plot_boost_profile(file_name + ".csv")
 
 
 def optimize():

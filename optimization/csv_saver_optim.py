@@ -19,8 +19,8 @@ def CSVsaver(optim_result_profile, circuit: Union[Circuit, CircuitBspline], file
     except FileExistsError:
         pass
     with open(
-        f"./optim_results/test/circuit_{file_name}.csv",
-        "w",
+        f"./optim_results/test/{file_name}.csv",
+        "w+",
         newline="",
     ) as file:
         writer = csv.writer(file)
