@@ -14,12 +14,10 @@ public class NumPfdSolver : MonoBehaviour{
     private float g = 9.81f;
     private PositionFunction xFunction;
 
-    public Solution tSolution;
 
 
     public NumPfdSolver(float pMass, float pFricitonCoeff, float pInitialSpeed, float pBoost, float pDx, float pDy){
         SetConstants(pMass, pFricitonCoeff, pInitialSpeed, pBoost, pDx, pDy);
-
     }
 
 
@@ -31,12 +29,11 @@ public class NumPfdSolver : MonoBehaviour{
         
         SetAngle(pDx, pDy);
         mass = pMass;
-        frictionCoeff = pfrictionCoeff;
-        initialSpeed = pinitialSpeed;
+        frictionCoeff = pFrictionCoeff;
+        initialSpeed = pInitialSpeed;
         boost = pBoost;
         dx = pDx;
         SetPositionFunction();
-
     }
 
     private void SetPositionFunction(){
@@ -45,18 +42,19 @@ public class NumPfdSolver : MonoBehaviour{
         float lambda = mass*(boost-g*Mathf.Sin(theta))/frictionCoeff;
         float tau = mass / (frictionCoeff*Mathf.Cos(theta));
 
-        xFunction = PositionFunction(A, tau, lambda, dx);
-
+        xFunction = new PositionFunction(A, tau, lambda, dx);
     }
 
 
 
 
     public Solution Solve(){
-        
-        Debug.Log("Starting to solve");
 
-        if(theta > 0 && !(xFunction.HasValidRoot())) tSolution = Solution();
+        Debug.Log("Starting to solve");
+        
+        Solution tSolution = new Solution();
+
+        if(theta > 0 && !(xFunction.HasValidRoot())) return tSolution;
 
         if(theta > 0 && xFunction.HasValidRoot()){
 
@@ -69,10 +67,10 @@ public class NumPfdSolver : MonoBehaviour{
         }
 
         if(theta < 0){ // Cas facile, où la voiture tombe grâce à la pente, donc atteint forcément le prochain point
-            DichotomyNumSolve(0f, 16f, 1f);
+            tSolution = DichotomyNumSolve(0f, 16f, 1f);
         }
 
-
+        return tSolution;
 
     }
 
@@ -80,9 +78,9 @@ public class NumPfdSolver : MonoBehaviour{
     public Solution DichotomyNumSolve(float tLeft, float tRight, float slope, float threshold=1e-9f){
 
         float tCurrent = (tRight + tLeft)/2.0f;
-        float xCurrent = ComputeXEqualXnext(tCurrent);
+        float xCurrent = xFunction.Evaluate(tCurrent);
         
-        while (Mahtf.Abs(xCurrent) > threshold){
+        while (Mathf.Abs(xCurrent) > threshold){
 
             if (slope*xCurrent < 0){
                 tLeft = tCurrent;
@@ -103,24 +101,10 @@ public class NumPfdSolver : MonoBehaviour{
 
     private void Start(){
 
-        Debug.Log("Start funcitonzfmaiuzefliuzaeulicazui");
-
-        float boost = 9.263267978358813f;
-        float dx = 4.9913882356122485f;
-        float dy = -0.25575537604623233f;
-        SetConstants(1000f, 0.2f, 0f, boost, dx, dy );
-
-        Solution s;
-
-        s = Solve();
-
-
-        sol = s.value;
+        Debug.Log("--------------------------------------- Start ---------------------------------------");
 
 
     }
-
-
 
 }
 
@@ -192,18 +176,18 @@ public class PositionFunction{
     public void SetOrigin(){
         xOrigin = Evaluate(0f);
     }
-    private float SetInflexionTime(){
+    private void SetInflexionTime(){
 
         float e = Mathf.Exp(1);
         tInflexion = tau*Mathf.Log(A/(tau*lambda), e);
     }
 
-    private float SetInflexionPosition(){
+    private void SetInflexionPosition(){
         xInflexion = Evaluate(tInflexion);
     }
 
     private void SetSmiling(){
-        smiling = Evaluate(ComputeInflexionTime()) < Evaluate(ComputeInflexionTime() + 1.0f);
+        smiling = Evaluate(tInflexion) < Evaluate(tInflexion + 1.0f);
     }
 
     public bool HasValidRoot(){
