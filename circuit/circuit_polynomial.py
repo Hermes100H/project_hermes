@@ -14,7 +14,7 @@ class Circuit:
         self.__circuitCoords = self.discretize(starting_x, ending_x, segment_length)
 
     def plot_circuit(self, block: bool):
-        plt.plot(self.__circuitCoords)
+        plt.plot(self.__circuitCoords[:, 0], self.__circuitCoords[:, 1])
         plt.show(block=block)
 
     def GetDeltas(self):
