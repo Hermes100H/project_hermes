@@ -1,6 +1,6 @@
-import random
+import functools
 import time
-from typing import Union
+from typing import Union, List
 
 import numpy as np
 import scipy
@@ -12,7 +12,8 @@ from contraintes import ContrainteNorme2Carre, ContrainteNormeInfini, ENERGIE_AC
 from display.display_acceleration_function import plot_boost_profile
 from optimization.costFunction import CostFunction
 from optimization.csv_saver_optim import CSVsaver, print_optim_info
-from utils.constants import TIME_ON_FAILURE
+from optimization.data_analysis.iteration_analysis import store_iteration_data_step, plot_iteration_steps
+from optimization.data_analysis.optimize_verbose_and_display import optim_display_results
 
 
 def init_circuit():
@@ -22,7 +23,7 @@ def init_circuit():
 
 
 def init_circuit_spline():
-    circuit = CircuitBspline(segment_length=2)
+    circuit = CircuitBspline(segment_length=5)
     circuit.plot_spline(False)
     return circuit
 
@@ -68,8 +69,13 @@ def init_args_optim(circuit):
     return args, tol, bounds, contraintes, options_trust_constr, options_slsqp, options_cobyla
 
 
+def evaluate_iteration_steps(circuit: Union[Circuit, CircuitBspline], saved_results: List):
+    return functools.partial(store_iteration_data_step, circuit=circuit, saved_results=saved_results)
+
+
 def optim(optim_method, profile0, contraintes, args, tol, option, bounds, circuit):
     start = time.time()
+    saved_results = list()
     if optim_method == "SLSQP":
         profile_opt = scipy.optimize.minimize(
             CostFunction,
@@ -80,6 +86,7 @@ def optim(optim_method, profile0, contraintes, args, tol, option, bounds, circui
             args=args,
             bounds=bounds,
             tol=tol,
+            callback=evaluate_iteration_steps(circuit=circuit, saved_results=saved_results)
         )
     else:
         profile_opt = scipy.optimize.minimize(
@@ -90,13 +97,12 @@ def optim(optim_method, profile0, contraintes, args, tol, option, bounds, circui
             options=option,
             args=args,
             tol=tol,
+            callback=evaluate_iteration_steps(circuit=circuit, saved_results=saved_results)
         )
     end = time.time()
     print_optim_info(profile_opt, circuit, optim_method)
     print(f"Temps de calcul de l'optimisation {optim_method} : {end - start} secondes")
-    file_name = "SplineCubiqueUnity_pluslong_test"
-    CSVsaver(profile_opt.x, circuit, file_name=file_name)
-    plot_boost_profile(file_name + ".csv")
+    optim_display_results(profile_opt, circuit, saved_results)
 
 
 def optimize():
