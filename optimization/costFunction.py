@@ -6,19 +6,22 @@ from optimization.pfd_solver import calculSolutions, calculVitesse, solve_positi
 from utils.constants import INITIAL_SPEED, TIME_ON_FAILURE, CONST_g, MASS, VITESSE_EXPULSION
 
 
-def calcTimings(profile: List, circui: Circuit):
-    vk = 0
-    dx, dy = circui.GetDeltas()
-    timings = list()
-    for i in range(dy.shape[0]):
-        Fp = profile[i] * VITESSE_EXPULSION / MASS
-        vk, tsol, solved_solution = calculSolutions(dy[i], dx[i], vk, CONST_g, Fp)
-        vk, solved_vitesse = calculVitesse(tsol, vk, dy[i], dx[i], CONST_g, Fp)
-        if not solved_solution or not solved_vitesse:
-            t = 100000
-            timings.append(t)
-            break
-        timings.append(tsol)
+def calcTimings(profile: List, circui: Circuit, friction: bool = False):
+    if friction:
+        timings = compute_times_with_air_friction(profile, circui)
+    else:
+        vk = 0
+        dx, dy = circui.GetDeltas()
+        timings = list()
+        for i in range(dy.shape[0]):
+            Fp = profile[i] * VITESSE_EXPULSION / MASS
+            vk, tsol, solved_solution = calculSolutions(dy[i], dx[i], vk, CONST_g, Fp)
+            vk, solved_vitesse = calculVitesse(tsol, vk, dy[i], dx[i], CONST_g, Fp)
+            if not solved_solution or not solved_vitesse:
+                t = 100000
+                timings.append(t)
+                break
+            timings.append(tsol)
     return timings
 
 
@@ -29,7 +32,7 @@ def compute_times_with_air_friction(boost_profile: List, circuit: Circuit):
     for i in range(dx_list.size):
         dx = dx_list[i]
         dy = dy_list[i]
-        boost_force = boost_profile[i]
+        boost_force = boost_profile[i] * VITESSE_EXPULSION
         theta = compute_angle(dy, dx)
         current_segment_time, initial_speed = solve_position_ode_with_air_friction(
             delta_x=dx, initial_speed=initial_speed, boost_force=boost_force, theta=theta
@@ -42,8 +45,8 @@ def compute_times_with_air_friction(boost_profile: List, circuit: Circuit):
     return times_per_segments
 
 
-def CostFunction(profile: List, circui: Circuit):
-    return sum(calcTimings(profile, circui))
+def CostFunction(profile: List, circui: Circuit, friction: bool = False):
+    return sum(calcTimings(profile, circui, friction))
 
 
 def friction_cost_function(profile: List, circuit: Circuit):

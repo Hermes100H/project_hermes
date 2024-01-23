@@ -43,7 +43,7 @@ def solve_position_ode_with_air_friction(
     friction_coeff: float = CONST_MU,
     mass: float = MASS,
 ) -> Tuple[float, float]:
-    coeff_A = (mass**2 * (boost_force - CONST_g * sin(theta)) - mass * friction_coeff * initial_speed) / (
+    coeff_A = (mass**2 * (boost_force - CONST_g * sin(theta)) - mass * friction_coeff * initial_speed * cos(theta)) / (
         friction_coeff**2 * cos(theta)
     )
     coeff_lambda = mass * (boost_force - CONST_g * sin(theta)) / friction_coeff
