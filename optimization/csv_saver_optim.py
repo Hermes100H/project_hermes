@@ -7,7 +7,7 @@ from scipy.optimize import OptimizeResult
 
 from circuit.circuit_bspline import CircuitBspline
 from circuit.circuit_polynomial import Circuit
-from optimization.contraintes import EnergieDepenseParInstantSpatial
+from optimization.contraintes import CarburantDepenseParInstantSpatial, DebitExpulsionSurLeCircuit
 from optimization.costFunction import calcTimings
 
 
@@ -29,7 +29,7 @@ def CSVsaver(optim_result_profile, circuit: Union[Circuit, CircuitBspline], file
         columns = [
             tuple(optim_result_profile),
             tuple(calcTimings(optim_result_profile, circuit)),
-            tuple(EnergieDepenseParInstantSpatial(optim_result_profile, circuit)),
+            tuple(CarburantDepenseParInstantSpatial(optim_result_profile, circuit)),
             tuple(dx),
             tuple(dy),
         ]
@@ -40,13 +40,15 @@ def CSVsaver(optim_result_profile, circuit: Union[Circuit, CircuitBspline], file
 def print_optim_info(boost_profile_optimal: OptimizeResult, circuit: Circuit, optim_method: str):
     print("===================================================")
     print(f"\n\nOptimisation avec {optim_method}")
-    print("Profil de boost obtenu :")
+    print("Profil de débit d'expulsion obtenu :")
     print(boost_profile_optimal.x)
     print(f"Temps de parcours, méthode {optim_method} : {boost_profile_optimal.fun} secondes")
     print("Profil d'énergie obtenu : ")
-    print(EnergieDepenseParInstantSpatial(boost_profile_optimal.x, circuit))
+    print(CarburantDepenseParInstantSpatial(boost_profile_optimal.x, circuit))
     print("Temps à chaque instant spatial :")
     print(calcTimings(boost_profile_optimal.x, circuit))
     print(
-        f"Energie totale du profil optimal : {sum(EnergieDepenseParInstantSpatial(boost_profile_optimal.x, circuit))}"
+        f"Carburant total dépensé du profil optimal : {sum(CarburantDepenseParInstantSpatial(boost_profile_optimal.x, circuit))}"
     )
+    print("Debit par instant sur le circuit")
+    print(DebitExpulsionSurLeCircuit(boost_profile_optimal.x, circuit))

@@ -7,24 +7,19 @@ import scipy
 
 from circuit.circuit_bspline import CircuitBspline
 from circuit.circuit_polynomial import Circuit
-from contraintes import ContrainteNorme2Carre, ContrainteNormeInfini, ENERGIE_ACCELERATION_MAXIMALE, \
-    EnergieDepenseParInstantSpatial
-from display.display_acceleration_function import plot_boost_profile
-from optimization.costFunction import CostFunction
-from optimization.csv_saver_optim import CSVsaver, print_optim_info
-from optimization.data_analysis.iteration_analysis import store_iteration_data_step, plot_iteration_steps
+from contraintes import ContrainteNorme2Carre, ContrainteNormeInfini, CarburantDepenseParInstantSpatial, DebitExpulsionSurLeCircuit
+from optimization.costFunction import CostFunction, calcTimings
+from optimization.csv_saver_optim import print_optim_info
+from optimization.data_analysis.iteration_analysis import store_iteration_data_step
 from optimization.data_analysis.optimize_verbose_and_display import optim_display_results
+from optimization.parcours_spline.init_circuits_spline import init_circuit_spline_150m_172pts, \
+    init_circuit_spline_plat_montee, init_circuit_spline_montee_abrupte
+from utils.constants import MASS, DEBIT_EXPULSION_MAXIMAL
 
 
-def init_circuit():
-    circuit = Circuit(coeffs=[0.01, -0.2, 1], segment_length=5, starting_x=0, ending_x=60)
-    circuit.plot_circuit(block=False)
-    return circuit
-
-
-def init_circuit_spline():
-    circuit = CircuitBspline(segment_length=5)
-    circuit.plot_spline(False)
+def init_circuit(block: bool):
+    circuit = Circuit(coeffs=[0, 0, 0], segment_length=1, starting_x=0, ending_x=60)
+    circuit.plot_circuit(block=block)
     return circuit
 
 
@@ -32,13 +27,17 @@ def init_profile(circuit: Union[Circuit, CircuitBspline]):
     nbre_segments = circuit.getNumberSegments()
     profile0 = [0 for i in range(int(nbre_segments))]
     for i in range(int(nbre_segments)):
-        profile0[i] = 10
-    print(f"Profil initial :")
-    print(profile0)
+        profile0[i] = DEBIT_EXPULSION_MAXIMAL
     print(
-        f"Energie totale du profil initial : {sum(EnergieDepenseParInstantSpatial(profile0, circuit))}"
+        f"Carburant depense avec le profil initial : {sum(CarburantDepenseParInstantSpatial(profile0, circuit))}"
     )
     print(f"Temps de parcours du profil inital : {CostFunction(profile0, circuit)}")
+    print(f"Profil initial de débit d'expulsion:")
+    print(profile0)
+    print(f"Temps initiaux :")
+    print(calcTimings(profile0, circuit))
+    print("Carburant depense par instant spatial :")
+    print(CarburantDepenseParInstantSpatial(profile0, circuit))
     return profile0
 
 
@@ -49,16 +48,17 @@ def init_args_optim(circuit):
     bounds = ((0, 10) for i in range(nbre_segments))
     contraintes = [
         {"type": "ineq", "fun": ContrainteNorme2Carre, "args": args},
-        {
-            "type": "ineq",
-            "fun": ContrainteNormeInfini,
-        },
+  #      {
+   #         "type": "ineq",
+    #        "fun": ContrainteNormeInfini,
+     #       "args": args
+      #  },
     ]
 
     options_slsqp = {
-        "maxiter": 100,
+        "maxiter": 500,
         "disp": True,
-        "eps": 0.05,
+        "eps": 0.1,
     }
 
     options_cobyla = {"rhobeg": 1.0, "disp": True, "maxiter": 100}
@@ -106,7 +106,7 @@ def optim(optim_method, profile0, contraintes, args, tol, option, bounds, circui
 
 
 def optimize():
-    circuit = init_circuit_spline()
+    circuit = init_circuit_spline_montee_abrupte(False)
     profile0 = init_profile(circuit)
     args, tol, bounds, contraintes, options_trust_constr, options_slsqp, options_cobyla = init_args_optim(circuit)
 

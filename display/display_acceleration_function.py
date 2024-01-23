@@ -15,9 +15,9 @@ def plot_boost_profile(file_name):
         dx_cumul[i+1] = dx_cumul[i] + dx[i]
     plt.figure()
     plt.plot(dx_cumul, acceleration_boost)
-    plt.title("Acceleration en fonction de la position")
+    plt.title("Debit en fonction de la position")
     plt.xlabel("Position")
-    plt.ylabel("Puissance d'acceleration fournie")
+    plt.ylabel("Force fournie")
     plt.show(block=False)
     
 
