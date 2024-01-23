@@ -6,4 +6,4 @@ INITIAL_SPEED = 0
 MASS = 1
 VITESSE_EXPULSION = 2  # m.s-1
 DEBIT_EXPULSION_MAXIMAL = 10  # kg.s-1
-M_CARBURANT = 30  # en kg , masse totale de carburant disponible pour le circuit
+M_CARBURANT = 250  # en kg , masse totale de carburant disponible pour le circuit

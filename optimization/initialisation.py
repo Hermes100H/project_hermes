@@ -35,12 +35,12 @@ def init_circuit_spline_plat_montee_140m(block: bool, segment_length: int):
     return circuit
 
 
-def init_circuit_spline_montee_abrupte(block: bool):
+def init_circuit_spline_montee_abrupte(block: bool, segment_length: int):
     x = [0, 2.93, 5.36, 6.54, 9.31, 14.11]
     y = [0, 1.75, 3.94, 6.66, 8.84, 8.85]
     y = [10 * val for val in y]
-    x = [100 * val for val in x]
-    circuit = CircuitBspline(segment_length=10, x=x, y=y)
+    x = [10 * val for val in x]
+    circuit = CircuitBspline(segment_length=segment_length, x=x, y=y)
     circuit.plot_spline(block)
     return circuit
 

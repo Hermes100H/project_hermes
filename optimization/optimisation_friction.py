@@ -8,7 +8,7 @@ from optimization.csv_saver_optim import print_optim_info, print_optim_info_fric
 from optimization.data_analysis.optimize_verbose_and_display import optim_display_results, \
     optim_display_results_friction
 from optimization.initialisation import init_circuit_spline_plat_montee_140m, init_profile, init_args_optim, \
-    evaluate_iteration_steps_friction, init_args_optim_friction, init_circuit
+    evaluate_iteration_steps_friction, init_args_optim_friction, init_circuit, init_circuit_spline_montee_abrupte
 
 
 def optimize_boost():
@@ -18,7 +18,7 @@ def optimize_boost():
         "disp": True,
         "eps": 0.05,
     }
-    circuit = init_circuit(False, segment_length=5)
+    circuit = init_circuit_spline_montee_abrupte(False, segment_length=30)
     profile0 = init_profile(circuit, friction=True)
     #circuit = Circuit(coeffs=[0.01, -0.2, 1], segment_length=5, starting_x=0, ending_x=30)
     #segments_number = circuit.getNumberSegments()
