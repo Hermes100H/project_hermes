@@ -3,7 +3,7 @@ from typing import List
 from circuit.circuit_polynomial import Circuit
 from circuit.maths_utils import compute_angle
 from optimization.pfd_solver import calculSolutions, calculVitesse, solve_position_ode_with_air_friction
-from utils.constants import INITIAL_SPEED, TIME_ON_FAILURE, CONST_g
+from utils.constants import INITIAL_SPEED, TIME_ON_FAILURE, CONST_g, MASS, VITESSE_EXPULSION
 
 
 def calcTimings(profile: List, circui: Circuit):
@@ -11,9 +11,9 @@ def calcTimings(profile: List, circui: Circuit):
     dx, dy = circui.GetDeltas()
     timings = list()
     for i in range(dy.shape[0]):
-        acceleration = profile[i]
-        vk, tsol, solved_solution = calculSolutions(dy[i], dx[i], vk, CONST_g, acceleration)
-        vk, solved_vitesse = calculVitesse(tsol, vk, dy[i], dx[i], CONST_g, acceleration)
+        Fp = profile[i] * VITESSE_EXPULSION / MASS
+        vk, tsol, solved_solution = calculSolutions(dy[i], dx[i], vk, CONST_g, Fp)
+        vk, solved_vitesse = calculVitesse(tsol, vk, dy[i], dx[i], CONST_g, Fp)
         if not solved_solution or not solved_vitesse:
             t = 100000
             timings.append(t)
