@@ -14,6 +14,10 @@ def store_iteration_data_step(profile: List, circuit: Union[Circuit, CircuitBspl
     saved_results.append((CostFunction(profile, circuit), profile, sum(CarburantDepenseParInstantSpatial(profile, circuit)), max(DebitExpulsionSurLeCircuit(profile, circuit))))
 
 
+def store_iteration_data_step_friction(profile: List, circuit: Union[Circuit, CircuitBspline], saved_results: List):
+    saved_results.append((CostFunction(profile, circuit, friction=True), profile, sum(CarburantDepenseParInstantSpatial(profile, circuit, friction=True)), max(DebitExpulsionSurLeCircuit(profile, circuit))))
+
+
 def plot_iteration_steps(saved_results: List, block: bool):
     cost_values = list()
     profiles = list()
@@ -37,7 +41,7 @@ def plot_iteration_steps(saved_results: List, block: bool):
     plt.ylabel('Gradient entre le profil final et le profil à une certaine itération')
     plt.figure()
     plt.plot(cost_values)
-    plt.title("Evolution de la fonction de coût en fonction des itérations")
+    plt.title("Evolution de la fonction de coût (temps total du parcours) en fonction des itérations")
     plt.xlabel('Itérations')
     plt.ylabel('Valeur de la fonction de coût en secondes')
     plt.show(block=False)

@@ -4,5 +4,6 @@ TIME_ON_FAILURE = 100_000
 SPEED_ON_FAILURE = 0
 INITIAL_SPEED = 0
 MASS = 1
-VITESSE_EXPULSION = 10  # m.s-1
+VITESSE_EXPULSION = 1  # m.s-1
 DEBIT_EXPULSION_MAXIMAL = 10  # kg.s-1
+M_CARBURANT = 55  # en kg , masse totale de carburant disponible pour le circuit

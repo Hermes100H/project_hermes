@@ -25,12 +25,10 @@ class CircuitBspline:
         self.__circuitCoords = self.discretize()
 
     def plot_spline(self, block: bool):
-        x_step = (self.end_x-self.start_x)/100
-        xs = np.arange(self.start_x, self.end_x + x_step, x_step)
         plt.figure()
         plt.title("Splines")
         plt.plot(self.x, self.y, "go")
-        plt.plot(xs, self.spline(xs), "-b")
+        plt.plot(self.__circuitCoords[:, 0], self.__circuitCoords[:, 1], "-b")
         plt.show(block=block)
 
     def get_spline_point_tangent(self):
@@ -80,5 +78,5 @@ class CircuitBspline:
 
 
 if __name__ == "__main__":
-    circuit = CircuitBspline(segment_length=1)
+    circuit = CircuitBspline(segment_length=3)
     circuit.plot_spline(True)
