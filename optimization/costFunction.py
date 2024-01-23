@@ -50,4 +50,5 @@ def CostFunction(profile: List, circui: Circuit, friction: bool = False):
 
 
 def friction_cost_function(profile: List, circuit: Circuit):
-    return sum(compute_times_with_air_friction(profile, circuit))
+    cost = sum(compute_times_with_air_friction(profile, circuit))
+    return cost

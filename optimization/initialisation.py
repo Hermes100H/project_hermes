@@ -10,7 +10,7 @@ from utils.constants import DEBIT_EXPULSION_MAXIMAL
 
 
 def init_circuit(block: bool, segment_length: int):
-    circuit = Circuit(coeffs=[0, 0, 0], segment_length=segment_length, starting_x=0, ending_x=150)
+    circuit = Circuit(coeffs=[0, 1/100, 0], segment_length=segment_length, starting_x=0, ending_x=150)
     circuit.plot_circuit(block=block)
     return circuit
 
@@ -77,9 +77,9 @@ def init_args_optim(circuit):
     ]
 
     options_slsqp = {
-        "maxiter": 500,
+        "maxiter": 100,
         "disp": True,
-        "eps": 0.1,
+        "eps": 0.2,
     }
 
     options_cobyla = {"rhobeg": 1.0, "disp": True, "maxiter": 100}
@@ -93,14 +93,14 @@ def init_args_optim(circuit):
 def init_args_optim_friction(circuit):
     nbre_segments = circuit.getNumberSegments()
     args = (circuit,)
-    tol = 1e-6
+    tol = 1e-4
     bounds = ((0, DEBIT_EXPULSION_MAXIMAL) for i in range(nbre_segments))
     contraintes = [
         {"type": "ineq", "fun": ContrainteNorme2Carre, "args": (circuit, True)},
     ]
 
     options_slsqp = {
-        "maxiter": 500,
+        "maxiter": 60,
         "disp": True,
         "eps": 0.1,
     }

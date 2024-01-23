@@ -17,7 +17,7 @@ def plot_boost_profile(file_name, csv_folder):
     plt.title("Debit en fonction de la position")
     plt.xlabel("Position")
     plt.ylabel("Force fournie")
-    plt.show(block=True)
+    plt.show(block=False)
     
 
 if __name__ == "__main__":
