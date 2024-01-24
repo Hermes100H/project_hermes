@@ -18,8 +18,6 @@ def CarburantDepenseParInstantSpatial(profile: List, circui: Circuit, friction: 
 def ContrainteNorme2Carre(profile: List, circui: Circuit, friction: bool = False):
     """L'énergie 'dépensée' pour l'acceleration ne doit pas dépasser une certaine valeur sur le circuit"""
     contrainte = M_CARBURANT - sum(CarburantDepenseParInstantSpatial(profile, circui, friction=friction))
-    print(contrainte)
-    print(profile)
     return contrainte
 
 

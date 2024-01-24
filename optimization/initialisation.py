@@ -10,17 +10,17 @@ from utils.constants import DEBIT_EXPULSION_MAXIMAL
 
 
 def init_circuit(block: bool, segment_length: int):
-    circuit = Circuit(coeffs=[0, 1/100, 0], segment_length=segment_length, starting_x=0, ending_x=150)
+    circuit = Circuit(coeffs=[0, 1/10, 0], segment_length=segment_length, starting_x=0, ending_x=150)
     circuit.plot_circuit(block=block)
     return circuit
 
 
-def init_circuit_spline_150m_172pts(block: bool):
+def init_circuit_spline_150m_172pts(block: bool, segment_length: int):
     y = [0, -1.28, 1.78, 0.36, 3.04, 5.27]
     y = [10 * val for val in y]
     x = [0, 4.29, 8.39, 10.11, 11.48, 16.64]
     x = [10 * val for val in x]
-    circuit = CircuitBspline(segment_length=2, x=x, y=y)
+    circuit = CircuitBspline(segment_length=segment_length, x=x, y=y)
     circuit.plot_spline(block)
     return circuit
 
@@ -38,8 +38,8 @@ def init_circuit_spline_plat_montee_140m(block: bool, segment_length: int):
 def init_circuit_spline_montee_abrupte(block: bool, segment_length: int):
     x = [0, 2.93, 5.36, 6.54, 9.31, 14.11]
     y = [0, 1.75, 3.94, 6.66, 8.84, 8.85]
-    y = [10 * val for val in y]
-    x = [10 * val for val in x]
+    y = [7 * val for val in y]
+    x = [20 * val for val in x]
     circuit = CircuitBspline(segment_length=segment_length, x=x, y=y)
     circuit.plot_spline(block)
     return circuit
@@ -77,7 +77,7 @@ def init_args_optim(circuit):
     ]
 
     options_slsqp = {
-        "maxiter": 100,
+        "maxiter": 200,
         "disp": True,
         "eps": 0.2,
     }
@@ -100,7 +100,7 @@ def init_args_optim_friction(circuit):
     ]
 
     options_slsqp = {
-        "maxiter": 60,
+        "maxiter": 2000,
         "disp": True,
         "eps": 0.1,
     }
@@ -113,10 +113,6 @@ def init_args_optim_friction(circuit):
     return args, tol, bounds, contraintes, options_trust_constr, options_slsqp, options_cobyla
 
 
-if __name__=="__main__":
-    init_circuit_spline_montee_abrupte(True)
-
-
 def evaluate_iteration_steps(circuit: Union[Circuit, CircuitBspline], saved_results: List):
     return functools.partial(store_iteration_data_step, circuit=circuit, saved_results=saved_results)
 
@@ -124,3 +120,7 @@ def evaluate_iteration_steps(circuit: Union[Circuit, CircuitBspline], saved_resu
 def evaluate_iteration_steps_friction(circuit: Union[Circuit, CircuitBspline], saved_results: List):
     return functools.partial(store_iteration_data_step_friction, circuit=circuit, saved_results=saved_results)
 
+
+
+if __name__=="__main__":
+    init_circuit_spline_150m_172pts(True, segment_length=1)

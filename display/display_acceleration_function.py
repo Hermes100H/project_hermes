@@ -21,6 +21,6 @@ def plot_boost_profile(file_name, csv_folder):
     
 
 if __name__ == "__main__":
-    file = "plat_montee_friction_140_len_3_kg_23.csv"
-    csv_folder = "../optim_results/test/"
+    file = "plan_incline_friction_ve_2_30pts_kg_30.csv"
+    csv_folder = "/home/alhost/CPE_S9/project_hermes/optims_et_circuits_pour_unity/"
     plot_boost_profile(file, csv_folder)

@@ -18,7 +18,7 @@ def optimize_boost():
         "disp": True,
         "eps": 0.05,
     }
-    circuit = init_circuit_spline_montee_abrupte(False, segment_length=30)
+    circuit = init_circuit(False, segment_length=5)
     profile0 = init_profile(circuit, friction=True)
     #circuit = Circuit(coeffs=[0.01, -0.2, 1], segment_length=5, starting_x=0, ending_x=30)
     #segments_number = circuit.getNumberSegments()
@@ -32,7 +32,7 @@ def optimize_boost():
     profile_opt = scipy.optimize.minimize(
         friction_cost_function,
         np.array(profile0),
-        method="SLSQP",
+        method="COBYLA",
         constraints=contraintes,
         options=options_slsqp,
         args=args,
@@ -43,8 +43,8 @@ def optimize_boost():
     print_optim_info_friction(profile_opt, circuit, "SLSQP")
     print(f"Temps de calcul de l'optimisation SLSQP : {end - start} secondes")
     csv_file_name = "plat_montee_friction_140_len_3_kg_23"
-    csv_file_name = "plan_incline_friction_15pts_kg_67"
-    optim_display_results_friction(profile_opt, circuit, saved_results, csv_file_name)
+    csv_file_name = "plan_incline_friction_15pts_kg_30"
+    #optim_display_results_friction(profile_opt, circuit, saved_results, csv_file_name)
 
 
 if __name__ == "__main__":

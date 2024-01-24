@@ -7,7 +7,7 @@ from optimization.costFunction import CostFunction
 from optimization.csv_saver_optim import print_optim_info
 from optimization.data_analysis.optimize_verbose_and_display import optim_display_results
 from optimization.initialisation import init_profile, init_args_optim, init_circuit_spline_montee_abrupte, \
-    evaluate_iteration_steps, init_circuit_spline_plat_montee_140m
+    evaluate_iteration_steps, init_circuit_spline_plat_montee_140m, init_circuit_spline_150m_172pts
 
 
 def optim(optim_method, profile0, contraintes, args, tol, option, bounds, circuit):
@@ -39,12 +39,12 @@ def optim(optim_method, profile0, contraintes, args, tol, option, bounds, circui
     end = time.time()
     print_optim_info(profile_opt, circuit, optim_method)
     print(f"Temps de calcul de l'optimisation {optim_method} : {end - start} secondes")
-    file_name_csv = "plat_montee_140m_segment_length_4_10_kg"
+    file_name_csv = "circuit1"
     optim_display_results(profile_opt, circuit, saved_results, file_name=file_name_csv)
 
 
 def optimize():
-    circuit = init_circuit_spline_plat_montee_140m(False, segment_length=4)
+    circuit = init_circuit_spline_150m_172pts(False, segment_length=4)
     profile0 = init_profile(circuit)
     args, tol, bounds, contraintes, options_trust_constr, options_slsqp, options_cobyla = init_args_optim(circuit)
 
